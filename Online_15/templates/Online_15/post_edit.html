@@ -1,0 +1,26 @@
+{% extends 'Online_15/base.html' %}
+
+{% block title %}新規投稿{% endblock %}
+
+{% block content %}
+<div class="content d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="post-card">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="id_title">タイトル</label>
+                {{ form.title }}
+            </div>
+            <div class="mb-3">
+                <label for="id_content">内容</label>
+                {{ form.content }}
+            </div>
+            <div class="mb-3">
+                <label for="id_Image">画像</label>
+                {{ form.Image.as_widget }}
+            </div>
+            <button type="submit" class="btn btn-primary">投稿</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

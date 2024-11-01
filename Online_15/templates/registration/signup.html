@@ -1,0 +1,109 @@
+{% extends 'Online_15/base.html' %}
+
+{% block title %}Sign Up - Stylish Online_15{% endblock %}
+
+{% block content %}
+<div class="content d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="card custom-card">
+        <div class="card-body">
+            <h2 class="card-title text-center">サインアップ</h2>
+            {% if form.errors %}
+                <div id="error-alert" class="alert alert-danger">
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                </div>
+                <div class="form-group">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                </div>
+                <div class="form-group">
+                    {{ form.password1.label_tag }}
+                    {{ form.password1 }}
+                </div>
+                <div class="form-group">
+                    {{ form.password2.label_tag }}
+                    {{ form.password2 }}
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mt-3">サインアップ</button>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    .custom-card {
+        width: 60rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        border: none;
+        padding: 2rem;
+    }
+
+    .card-title {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+    }
+
+    @media (max-width: 600px) {
+        .custom-card {
+            width: 24rem;
+        }
+    }
+
+    .alert {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1050;
+        padding: 1rem;
+        text-align: center;
+        transition: transform 0.5s ease-in-out;
+        transform: translateY(-100%);
+    }
+
+    .alert.show {
+        transform: translateY(0);
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const alertBox = document.getElementById('error-alert');
+        if (alertBox) {
+            alertBox.classList.add('show');
+            setTimeout(function() {
+                alertBox.classList.remove('show');
+            }, 3000);
+        }
+    });
+</script>
+{% endblock %}

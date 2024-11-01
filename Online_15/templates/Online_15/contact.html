@@ -1,0 +1,103 @@
+{% extends 'Online_15/base.html' %}
+
+{% block title %}お問い合わせ - Stylish Online_15{% endblock %}
+
+{% block content %}
+<div class="content d-flex justify-content-center align-items-center" style="min-height: 50vh;">
+    <div class="card custom-card">
+        <div class="card-body">
+            <h2 class="card-title text-center">お問い合わせ</h2>
+            {% if messages %}
+                <div id="success-alert" class="alert alert-success">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if form.errors %}
+                <div id="error-alert" class="alert alert-danger">
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.name.label_tag }}
+                    {{ form.name }}
+                </div>
+                <div class="form-group">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                </div>
+                <div class="form-group">
+                    {{ form.message.label_tag }}
+                    {{ form.message }}
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mt-3">送信</button>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    .custom-card {
+        width: 60rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        border: none;
+        padding: 2rem;
+    }
+
+    .card-title {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group input, .form-group textarea {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+    }
+
+    .form-group textarea {
+        height: 6em; /* 6行分の高さ */
+        resize: none; /* サイズ変更を無効化 */
+    }
+
+    @media (max-width: 600px) {
+        .custom-card {
+            width: 24rem;
+        }
+    }
+
+    .alert {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1050;
+        padding: 1rem;
+        text-align: center;
+        transition: transform 0.5s ease-in-out;
+        transform: translateY(-100%);
+    }
+
+    .alert.show {
+        transform: translateY(0);
+    }
+</style>
+{% endblock %}

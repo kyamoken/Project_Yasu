@@ -1,0 +1,18 @@
+<!-- Online_15/templates/Online_15/post_confirm_delete.html -->
+
+{% extends 'Online_15/base.html' %}
+
+{% block title %}投稿の削除確認{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h2>投稿の削除確認</h2>
+    <p>本当にこの投稿を削除してもよろしいですか？</p>
+    <p><strong>{{ post.title }}</strong></p>
+    <form action="" method="post">
+        {% csrf_token %}
+        <button type="submit">削除</button>
+        <a href="{% url 'post_detail' post.id %}">キャンセル</a>
+    </form>
+</div>
+{% endblock %}

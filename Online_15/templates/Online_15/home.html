@@ -1,0 +1,129 @@
+{% extends 'Online_15/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Home - Online_15{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h2>Home</h2>
+    <p>ようこそ！</p>
+
+    <div class="posts" id="posts-container" data-infinite-scroll='{ "path": ".pagination__next", "append": ".post", "history": false }'>
+        {% for post in page_obj %}
+            <div class="post">
+                <a href="{% url 'post_detail' post.id %}" class="post-link">
+                    <h3>
+                        {{ post.title|slice:":10" }}
+                        {% if post.title|length > 10 %}
+                            <span class="read-more"></span>
+                        {% endif %}
+                    </h3>
+                    {% if post.Image %}
+                        <img src="{{ post.Image.url }}" alt="Post Image">
+                    {% else %}
+                        <img src="{% static 'default_image.jpg' %}" alt="Default Image">
+                    {% endif %}
+                    <p>{{ post.content|slice:":30" }}{% if post.content|length > 20 %}...{% endif %}</p>
+                </a>
+                <div class="like-section">
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'like_post' post.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="like-button" data-post-id="{{ post.id }}" data-liked="{{ user|has_liked:post }}">
+                                <i class="fa fa-heart{% if not user|has_liked:post %}-o{% endif %}"></i>
+                            </button>
+                        </form>
+                        <span class="like-count">{{ post.likes }}</span>
+                    {% else %}
+                        <button type="button" class="like-button" disabled>
+                            <i class="fa fa-heart-o"></i>
+                        </button>
+                        <span class="like-count">{{ post.likes }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="pagination">
+        <a class="pagination__next" href="?page=2"></a>
+    </div>
+    <button id="load-more-button" class="load-more">もっと見る</button>
+    <div id="loading" style="display: none;">ロード中...</div>
+    <div id="end-message" style="display: none;">ここが最後のページです！</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const postsContainer = document.getElementById('posts-container');
+    const loadMoreButton = document.getElementById('load-more-button');
+    const loadingIndicator = document.getElementById('loading');
+    const endMessage = document.getElementById('end-message');
+    const defaultImageUrl = "{% static 'default_image.jpg' %}";
+
+    const infScroll = new InfiniteScroll(postsContainer, {
+        path: '.pagination__next',
+        append: '.post',
+        history: false,
+        status: '.page-load-status',
+        responseType: 'text',
+        checkLastPage: true,
+    });
+
+    infScroll.on('load', function(response) {
+        let data;
+        try {
+            data = JSON.parse(response);
+        } catch (error) {
+            console.error('Parsing error:', error);
+            endMessage.innerText = 'データの取得に失敗しました';
+            endMessage.style.display = 'block';
+            return;
+        }
+
+        if (data.posts && data.posts.length > 0) {
+            data.posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('post');
+                postElement.innerHTML = `
+                    <a href="/post/${post.id}" class="post-link">
+                        <h3>${post.title.slice(0, 10)}${post.title.length > 10 ? '<span class="read-more"></span>' : ''}</h3>
+                        <img src="${post.Image ? post.Image.url : defaultImageUrl}" alt="Post Image">
+                        <p>${post.content.slice(0, 30)}${post.content.length > 20 ? '...' : ''}</p>
+                    </a>
+                    <div class="like-section">
+                        <button type="button" class="like-button" disabled>
+                            <i class="fa fa-heart-o"></i>
+                        </button>
+                        <span class="like-count">${post.likes}</span>
+                    </div>
+                `;
+                postsContainer.appendChild(postElement);
+            });
+        } else {
+            infScroll.destroy();
+            loadMoreButton.style.display = 'none';
+            endMessage.style.display = 'block';
+        }
+    });
+
+    infScroll.on('last', function() {
+        loadMoreButton.style.display = 'none';
+        endMessage.style.display = 'block';
+    });
+
+    infScroll.on('error', function(error) {
+        console.error('Error:', error);
+        endMessage.innerText = 'エラーが発生しました';
+        endMessage.style.display = 'block';
+    });
+
+    loadMoreButton.addEventListener('click', function() {
+        infScroll.loadNextPage();
+    });
+});
+</script>
+{% endblock %}

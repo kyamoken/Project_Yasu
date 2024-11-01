@@ -1,0 +1,61 @@
+{% extends 'Online_15/base.html' %}
+
+{% block title %}Login - Stylish Online_15{% endblock %}
+
+{% block content %}
+<div class="content d-flex align-items-center" style="min-height: 100vh;">
+    <div class="card custom-card">
+        <div class="card-body">
+            <h2 class="card-title text-center">ログイン</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                </div>
+                <div class="form-group">
+                    {{ form.password.label_tag }}
+                    {{ form.password }}
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mt-3">ログイン</button>
+            </form>
+        </div>
+    </div>
+</div>
+    <style>
+        .custom-card {
+            width: 60rem;
+            margin-top: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            border: none;
+            padding: 2rem;
+        }
+
+        .card-title {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+        }
+
+        @media (max-width: 600px) {
+            .custom-card {
+                width: 24rem;
+            }
+        }
+    </style>
+{% endblock %}
