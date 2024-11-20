@@ -147,3 +147,9 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
+
+
+try:
+    from .local_settings import * # pylint: disable=wildcard-import, unused-wildcard-import
+except ImportError:
+    pass
