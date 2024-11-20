@@ -11,8 +11,8 @@ local_settings.py
 db.sqlite3
 
 # Static and Media files
-/static/
-staticfiles/
+#/static/
+#staticfiles/
 media/
 
 # Migrations
