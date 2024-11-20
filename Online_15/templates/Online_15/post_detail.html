@@ -23,12 +23,12 @@
             {% endif %}
             <span id="like-count">{{ post.likes }}</span>
         </div>
-        {% if user.is_authenticated %}
-            <form id="delete-form" action="{% url 'post_delete' post.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="delete-button">削除</button>
-            </form>
-        {% endif %}
+{% if user.is_authenticated and user == post.auther %}
+    <form id="delete-form" action="{% url 'post_delete' post.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="delete-button">削除</button>
+    </form>
+{% endif %}
     </div>
 
     <div class="comments-section">

@@ -58,10 +58,16 @@ class PostDetailView(DetailView):
         return self.render_to_response(context)
 
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     template_name = 'Online_15/post_confirm_delete.html'
     success_url = reverse_lazy('home')
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
+
+
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
