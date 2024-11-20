@@ -1,8 +1,21 @@
 // static/js/main.js
 
+let navToggleTimeout = null;
 document.querySelector('.menu-toggle').addEventListener('click', function() {
     const menu = document.querySelector('.menu-items');
-    menu.classList.toggle('show');
+    if (menu.classList.contains('show')) {
+        menu.classList.remove('show');
+        clearTimeout(navToggleTimeout);
+        navToggleTimeout = setTimeout(() => {
+            menu.style.display = 'none';
+        }, 500);
+    } else {
+        clearTimeout(navToggleTimeout);
+        menu.style.display = 'block';
+        navToggleTimeout = setTimeout(() => {
+            menu.classList.add('show');
+        }, 20);
+   }
 });
 
 function confirmLogout() {

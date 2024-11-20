@@ -1,109 +1,252 @@
 {% extends 'Online_15/base.html' %}
+{% load static %}
 
 {% block title %}Sign Up - Stylish Online_15{% endblock %}
 
 {% block content %}
-<div class="content d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+<section id="signup">
     <div class="card custom-card">
-        <div class="card-body">
-            <h2 class="card-title text-center">サインアップ</h2>
-            {% if form.errors %}
-                <div id="error-alert" class="alert alert-danger">
-                    <ul>
-                        {% for field, errors in form.errors.items %}
-                            {% for error in errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
+        <h2 class="card-title text-center">サインアップ</h2>
+        {% if form.errors %}
+            <div id="error-alert" class="alert alert-danger">
+                <ul>
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li>{{ field }}{{ error }}</li>
                         {% endfor %}
-                    </ul>
-                </div>
-            {% endif %}
-            <form method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    {{ form.username.label_tag }}
-                    {{ form.username }}
-                </div>
-                <div class="form-group">
-                    {{ form.email.label_tag }}
-                    {{ form.email }}
-                </div>
-                <div class="form-group">
-                    {{ form.password1.label_tag }}
-                    {{ form.password1 }}
-                </div>
-                <div class="form-group">
-                    {{ form.password2.label_tag }}
-                    {{ form.password2 }}
-                </div>
-                <button type="submit" class="btn btn-primary w-100 mt-3">サインアップ</button>
-            </form>
-        </div>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <label class="kamofield mb-2" data-rule="required ">
+                <span class="label"><span>ユーザー名</span></span>
+                <input type="text" id="username" name="username" placeholder="ユーザー名を入力してください"/>
+            </label>
+
+            <label class="kamofield mb-2" data-rule="required email">
+                <span class="label"><span>Email</span></span>
+                <input type="text" id="email" name="email" placeholder="メールアドレスを入力してください"/>
+            </label>
+
+            <label class="kamofield mb-2" data-rule="required">
+                <span class="label"><span>パスワード</span></span>
+                <input type="password" id="password" name="password1" placeholder="パスワードを入力してください"/>
+            </label>
+
+            <label class="kamofield" data-rule="required">
+                <span class="label"><span>パスワード再確認</span></span>
+                <input type="password" id="password_confirmation" name="password2" placeholder="再度パスワードを入力してください"/>
+            </label>
+
+            <input class="button" type="submit" value="サインアップ" />
+        </form>
     </div>
-</div>
+</section>
 <style>
+    @font-face {
+        font-family: 'KanjukuGothic';
+        src: url('{% static "fonts/かんじゅくゴシック.otf" %}') format('opentype');
+    }
+
+    section#signup {
+        background: #efefef;
+        font-size: 62.5%;
+        font-family: 'Lato', sans-serif;
+        font-weight: 300;
+        color: #B6B6B6;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
     .custom-card {
-        width: 60rem;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-        border: none;
+        background: white;
         padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 80%;
+        max-width: 600px;
+        text-align: center;
+        font-family: 'KanjukuGothic', 'Lato', sans-serif; /* フォントを追加 */
     }
 
-    .card-title {
+    .custom-card h1 {
         margin-bottom: 1.5rem;
+        font-size: 2.5em;
+        font-family: 'KanjukuGothic', 'Lato', sans-serif;
+        font-weight: 100;
     }
 
-    .form-group {
-        margin-bottom: 1rem;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 0.5rem;
-    }
-
-    .form-group input {
+    .custom-card form {
         width: 100%;
-        padding: 0.5rem;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
     }
 
-    @media (max-width: 600px) {
-        .custom-card {
-            width: 24rem;
-        }
+    .custom-card .field {
+        width: 100%;
+        position: relative;
+        margin-bottom: 15px;
     }
 
-    .alert {
-        position: fixed;
+    .custom-card .field label {
+        position: absolute;
         top: 0;
         left: 0;
-        right: 0;
-        z-index: 1050;
-        padding: 1rem;
-        text-align: center;
-        transition: transform 0.5s ease-in-out;
-        transform: translateY(-100%);
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #e0e0e0;
+        width: 100%;
+        font-size: 1.8em;
+        letter-spacing: 0.075em;
+        transition: all 333ms ease-in-out;
+        font-family: 'KanjukuGothic', 'Lato', sans-serif;
+        border-radius: 5px;
+        user-select: none;
     }
 
-    .alert.show {
-        transform: translateY(0);
+    .custom-card .field .check-icon,
+    .custom-card .field .invalid-icon {
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 7%;
+        width: 2.5em;
+        height: 2.5em;
+        opacity: 0;
+        transform: translateY(-50%) scale(.6);
+        transition: all 333ms ease-in-out;
+    }
+
+    .custom-card .field .focused:valid ~ .check-icon {
+        transform: translateY(-50%) scale(1);
+        opacity: 1;
+    }
+
+    .custom-card .field .focused:invalid ~ .invalid-icon {
+        transform: translateY(-50%) scale(1);
+        opacity: 1;
+    }
+
+    .custom-card .field input,
+    .custom-card .field textarea {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        padding: 18px 0;
+        padding-left: 25%;
+        background: #E8E9EA;
+        color: #313A3D;
+        font-size: 1.4em;
+        letter-spacing: 0.05em;
+        border: none;
+        transition: all 333ms ease-in-out;
+    }
+
+    .custom-card .field :invalid ~ label {
+        background-color: #ef5c5c !important;
+    }
+
+    .custom-card .field textarea {
+        resize: none;
+        vertical-align: bottom;
+    }
+
+    .custom-card .field input:focus,
+    .custom-card .field textarea:focus,
+    .custom-card .field input.focused,
+    .custom-card .field textarea.focused {
+        outline: none;
+        background: #d0d0d0; /* フォーカス時の背景色 */
+    }
+
+    .custom-card .field input:focus#msg,
+    .custom-card .field textarea:focus#msg,
+    .custom-card .field input.focused#msg,
+    .custom-card .field textarea.focused#msg {
+        padding-bottom: 150px;
+    }
+
+    .custom-card .field input:focus + label,
+    .custom-card .field textarea:focus + label,
+    .custom-card .field input.focused + label,
+    .custom-card .field textarea.focused + label {
+        width: 18%;
+        background: #1d4ed8;
+        color: #ffffff;
+    }
+
+    .custom-card .field input.focused + label,
+    .custom-card .field textarea.focused + label {
+        color: transparent;
+    }
+
+    .custom-card .field input:focus + label,
+    .custom-card .field textarea:focus + label,
+    .custom-card .field .focused + label,
+    .custom-card .field:hover label {
+        width: 18%;
+        background: #313A3D;
+        color: white;
+    }
+
+    .custom-card input[type="submit"] {
+        margin-top: 20px;
+        background: #1d4ed8;
+        color: #c9f0ff;
+        -webkit-appearance: none;
+        border: none;
+        position: relative;
+        padding: 13px 50px;
+        font-size: 1.4em;
+        letter-spacing: 0.1em;
+        font-family: 'Lato', sans-serif;
+        font-weight: 300;
+        transition: all 333ms ease-in-out;
+        border-radius: 5px;
+    }
+
+    .custom-card input[type="submit"]:hover {
+        background: #718cd5;
+        color: #ffffff;
+    }
+
+    .custom-card input[type="submit"]:focus {
+        outline: none;
+        background: rgba(29, 78, 216, 0.8);
     }
 </style>
-{% endblock %}
 
-{% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const alertBox = document.getElementById('error-alert');
-        if (alertBox) {
-            alertBox.classList.add('show');
-            setTimeout(function() {
-                alertBox.classList.remove('show');
-            }, 3000);
-        }
+        const inputs = document.querySelectorAll('section#signup input');
+
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.classList.add('focused');
+            });
+
+            input.addEventListener('blur', function() {
+                if (this.value !== '') {
+                    this.classList.add('focused');
+                    if (this.checkValidity()) {
+                        this.nextElementSibling.style.opacity = 1;
+                        this.nextElementSibling.nextElementSibling.style.opacity = 0;
+                    } else {
+                        this.nextElementSibling.style.opacity = 0;
+                        this.nextElementSibling.nextElementSibling.style.opacity = 1;
+                    }
+                } else {
+                    this.classList.remove('focused');
+                    this.nextElementSibling.style.opacity = 0;
+                    this.nextElementSibling.nextElementSibling.style.opacity = 0;
+                }
+            });
+        });
     });
 </script>
+
 {% endblock %}
