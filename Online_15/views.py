@@ -3,15 +3,15 @@ from django.core.paginator import Paginator
 from django.utils.decorators import method_decorator
 from django.utils.http import urlencode
 from django.views.decorators.http import require_POST
-from django.views.generic import DetailView, CreateView, TemplateView, DeleteView, View, FormView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import DetailView, CreateView, TemplateView, DeleteView, View, FormView, ListView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponseRedirect
-from .models import Post, CustomUser, Like
-from .forms import PostForm, CustomUserCreationForm, ContactForm
+from .models import Post, CustomUser, Like, Comment, CommentLike, Announcement
+from .forms import PostForm, CustomUserCreationForm, ContactForm, CommentForm, AnnouncementForm
 
 
 class HomePageView(TemplateView):
@@ -36,10 +36,33 @@ class PostDetailView(DetailView):
     model = Post
     template_name = 'Online_15/post_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.get_object()
+        comments = Comment.objects.filter(post=post)
+        context['comments'] = comments
+        context['comment_form'] = CommentForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()  # オブジェクトを取得して設定
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.post = self.object
+            new_comment.user = request.user
+            new_comment.save()
+            return redirect('post_detail', pk=self.object.pk)
+        context = self.get_context_data()
+        context['comment_form'] = comment_form
+        return self.render_to_response(context)
+
+
 class PostDeleteView(DeleteView):
     model = Post
     template_name = 'Online_15/post_confirm_delete.html'
     success_url = reverse_lazy('home')
+
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
@@ -49,34 +72,39 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         response = super().form_valid(form)
+
         messages.success(self.request, '投稿が完了しました。')
         return response
 
     def get_success_url(self):
         return reverse('home')
 
+
 class SignUpView(CreateView):
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
+
 
 class ProfileView(LoginRequiredMixin, TemplateView):
     template_name = 'registration/profile.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user_posts = Post.objects.filter(user=self.request.user)  # 修正: author -> user
-        paginator = Paginator(user_posts, 12)  # 1ページに12個の投稿を表示
+        user_posts = Post.objects.filter(user=self.request.user)
+        paginator = Paginator(user_posts, 12)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         context['page_obj'] = page_obj
         return context
 
+
 class CustomLogoutView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         logout(request)
         messages.success(request, 'ログアウトしました。')
-        return redirect('home')  # リダイレクト先を指定
+        return redirect('home')
+
 
 class LikePostView(LoginRequiredMixin, View):
     @method_decorator(require_POST)
@@ -89,16 +117,30 @@ class LikePostView(LoginRequiredMixin, View):
         else:
             liked = True
 
-        # Likeの数を集計してpost.likesに保存する
         post.likes = Like.objects.filter(post=post).count()
         post.save()
 
         return JsonResponse({'liked': liked, 'likes_count': post.likes})
 
+
+class LikeCommentView(LoginRequiredMixin, View):
+    @method_decorator(require_POST)
+    def post(self, request, comment_id, *args, **kwargs):
+        comment = get_object_or_404(Comment, id=comment_id)
+        like, created = CommentLike.objects.get_or_create(user=request.user, comment=comment)
+        if not created:
+            like.delete()
+            liked = False
+        else:
+            liked = True
+
+        return JsonResponse({'liked': liked, 'likes_count': comment.total_likes()})
+
+
 class ContactView(FormView):
     template_name = 'Online_15/contact.html'
     form_class = ContactForm
-    success_url = reverse_lazy('home')  # ホームページにリダイレクト
+    success_url = reverse_lazy('home')
 
     def form_valid(self, form):
         name = form.cleaned_data['name']
@@ -108,9 +150,28 @@ class ContactView(FormView):
             f'お問い合わせ: {name}',
             message,
             email,
-            ['kamoken0531@gmail.com'],  # 受信するメールアドレスに変更
+            ['kamoken0531@gmail.com'],
         )
-
 
         messages.success(self.request, '送信完了！')
         return super().form_valid(form)
+
+
+class AnnouncementListView(ListView):
+    model = Announcement
+    template_name = 'Online_15/announcement_list.html'
+    context_object_name = 'announcements'
+    ordering = ['-created_at']
+
+class AnnouncementCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = Announcement
+    form_class = AnnouncementForm
+    template_name = 'Online_15/announcement_form.html'
+    success_url = reverse_lazy('announcement_list')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        return self.request.user.is_superuser

@@ -14,13 +14,13 @@
         {% for post in page_obj %}
             <div class="post">
                 <a href="{% url 'post_detail' post.id %}" class="post-link">
-                    <h3>{{ post.title }}</h3>
+                    <h3>{{ post.title|slice:":10" }}</h3>
                     {% if post.Image %}
                         <img src="{{ post.Image.url }}" alt="{{ post.title }}">
                     {% else %}
                         <img src="{% static 'default_image.jpg' %}" alt="デフォルト画像">
                     {% endif %}
-                    <p>{{ post.content }}</p>
+                    <p>{{ post.content|slice:":30" }}</p>
                 </a>
             </div>
         {% endfor %}

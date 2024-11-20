@@ -13,12 +13,9 @@
         <p>{{ post.content|slice:":100" }}{% if post.content|length > 100 %}...{% endif %}</p>
         <div class="like-section">
             {% if user.is_authenticated %}
-                <form method="post" action="{% url 'like_post' post.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="like-button" data-liked="{{ user|has_liked:post }}">
-                        <i class="fa fa-heart{% if not user|has_liked:post %}-o{% endif %}"></i>
-                    </button>
-                </form>
+                <button class="like-button" data-liked="{{ user|has_liked:post }}" data-url="{% url 'like_post' post.id %}">
+                    <i class="fa fa-heart{% if not user|has_liked:post %}-o{% endif %}"></i>
+                </button>
             {% else %}
                 <span class="like-button">
                     <i class="fa fa-heart-o"></i>
@@ -33,36 +30,130 @@
             </form>
         {% endif %}
     </div>
+
+    <div class="comments-section">
+        <h3>コメント</h3>
+        {% for comment in comments %}
+            <div class="comment-box">
+                <p><strong>{{ comment.user.username }}</strong> - {{ comment.posted_at }}</p>
+                <p>{{ comment.content }}</p>
+                <div class="like-section">
+                    {% if user.is_authenticated %}
+                        <button class="like-button" data-liked="{{ user|has_liked_comment:comment }}" data-url="{% url 'like_comment' comment.id %}">
+                            <i class="fa fa-heart{% if not user|has_liked_comment:comment %}-o{% endif %}"></i>
+                        </button>
+                    {% else %}
+                        <span class="like-button">
+                            <i class="fa fa-heart-o"></i>
+                        </span>
+                    {% endif %}
+                    <span id="like-count-{{ comment.id }}">{{ comment.total_likes }}</span>
+                </div>
+            </div>
+        {% endfor %}
+
+        {% if user.is_authenticated %}
+            <div class="comment-box">
+                <form method="post" action="">
+                    {% csrf_token %}
+                    {{ comment_form.as_p }}
+                    <button type="submit" class="submit-button">コメントを追加</button>
+                </form>
+            </div>
+        {% else %}
+            <p>コメントを追加するには<a href="{% url 'login' %}">ログイン</a>してください。</p>
+        {% endif %}
+    </div>
 </div>
+
 <style>
-    .post-box {
-        width: 800px; /* 固定幅 */
-        height: 600px; /* 固定高さ */
-        border: 1px solid #ccc; /* 枠線 */
-        border-radius: 8px; /* 角を丸める */
-        padding: 20px; /* 内側の余白 */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 影を追加 */
-        overflow: hidden; /* 内容がはみ出さないようにする */
-        margin: 20px auto; /* 中央揃え */
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .post-box, .comment-box {
+        width: 800px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        margin: 20px auto;
     }
 
     .post-image {
-        width: 100%; /* 幅を100%に設定 */
-        height: 200px; /* 固定の高さを設定 */
-        object-fit: cover; /* 画像を切り取ってカード全体にフィットさせる */
-        border-radius: 8px; /* カードの角を丸める */
-        margin-bottom: 10px; /* マージンを設定 */
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 10px;
     }
-@media (max-width: 800px) {
-    .post-box {
-        width: 90%; /* 幅を90%に設定 */
-        height: auto; /* 高さを自動調整 */
-        margin: 10px auto; /* 中央揃え */
+
+    .comments-section {
+        width: 800px;
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
-}
+
+    .comment-box {
+        width: 100%;
+        margin-top: 10px;
+        border-radius: 10px;
+    }
+
+    .submit-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .submit-button:hover {
+        background-color: #0056b3;
+    }
+
+    @media (max-width: 800px) {
+        .post-box, .comments-section {
+            width: 90%;
+        }
+    }
 </style>
+
 {% if user.is_authenticated %}
 <script>
+    document.querySelectorAll('.like-button').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            const url = this.dataset.url;
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const likeCountSpan = this.closest('.like-section').querySelector('span[id^="like-count"]');
+            const liked = this.dataset.liked === 'True';
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => response.json()).then(data => {
+                if (data.liked) {
+                    this.querySelector('i').classList.remove('fa-heart-o');
+                    this.querySelector('i').classList.add('fa-heart');
+                } else {
+                    this.querySelector('i').classList.remove('fa-heart');
+                    this.querySelector('i').classList.add('fa-heart-o');
+                }
+                likeCountSpan.textContent = data.likes_count;
+                this.dataset.liked = data.liked;
+            }).catch(error => console.error('Error:', error));
+        });
+    });
+
     document.getElementById('delete-form').addEventListener('submit', function(event) {
         event.preventDefault();
         if (confirm('本当にこの投稿を削除してもよろしいですか？')) {
@@ -74,7 +165,7 @@
             }).then(response => {
                 if (response.ok) {
                     alert('削除に成功しました');
-                    window.location.href = "{% url 'home' %}";
+                    document.querySelector('.post-box').remove();
                 } else {
                     alert('削除に失敗しました');
                 }

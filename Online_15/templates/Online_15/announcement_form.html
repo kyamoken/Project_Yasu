@@ -1,0 +1,22 @@
+{% extends 'Online_15/base.html' %}
+
+{% block content %}
+<section style="text-align: center; margin: 0 auto; max-width: 800px;">
+    <h2>新しいお知らせを作成</h2>
+    <div style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; margin: 20px 0; border-radius: 8px; background-color: #fff;">
+        <form method="post">
+            {% csrf_token %}
+            <label class="kamofield mb-2" data-rule="required">
+                <span class="label"><span>タイトル</span></span>
+                <input type="text" id="title" name="title" placeholder="タイトル"/>
+            </label>
+
+            <label class="kamofield mb-2" data-rule="required">
+                <span class="label"><span>内容</span></span>
+                <input type="text" id="content" name="content" placeholder="詳細"/>
+            </label>
+            <button type="submit">投稿</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

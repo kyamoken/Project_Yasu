@@ -97,7 +97,7 @@ EMAIL_HOST = 'smtp.gmail.com'  # GmailのSMTPサーバー
 EMAIL_PORT = 587  # TLSポート
 EMAIL_USE_TLS = True  # TLSを使用
 EMAIL_HOST_USER = 'kamoken0531@gmail.com'  # Gmailアドレス
-EMAIL_HOST_PASSWORD = 'oyjquqeaapyxbzrl'  # Gmailアカウントのパスワード
+EMAIL_HOST_PASSWORD = 'oyjq uqea apyx bzrl'  # Gmailアカウントのパスワード
 
 
 # Password validation

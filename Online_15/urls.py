@@ -1,8 +1,8 @@
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from django.conf import settings
-from .views import PostDetailView, PostCreateView, HomePageView, SignUpView, PostDeleteView, ProfileView, LikePostView, \
-    ContactView
+from .views import PostDetailView,AnnouncementListView, AnnouncementCreateView, PostCreateView, HomePageView, SignUpView, PostDeleteView, ProfileView, LikePostView, \
+    ContactView, LikeCommentView
 
 urlpatterns = [
     path('', HomePageView.as_view(), name='home'),
@@ -16,9 +16,12 @@ urlpatterns = [
     path('profile/', ProfileView.as_view(), name='profile'),
     path('like/<int:post_id>/', LikePostView.as_view(), name='like_post'),
     path('contact/', ContactView.as_view(), name='contact'),
-
-
+    path('like_comment/<int:comment_id>/', LikeCommentView.as_view(), name='like_comment'),
+    path('announcements/', AnnouncementListView.as_view(), name='announcement_list'),
+    path('announcements/new/', AnnouncementCreateView.as_view(), name='announcement_create'),
 ]
+
+
 
 # if settings.DEBUG:
 #     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

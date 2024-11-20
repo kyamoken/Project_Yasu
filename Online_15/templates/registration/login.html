@@ -1,61 +1,95 @@
 {% extends 'Online_15/base.html' %}
+{% load static %}
 
-{% block title %}Login - Stylish Online_15{% endblock %}
-
+{% block title %}Login{% endblock %}
 {% block content %}
-<div class="content d-flex align-items-center" style="min-height: 100vh;">
+<section id="login">
     <div class="card custom-card">
-        <div class="card-body">
-            <h2 class="card-title text-center">ログイン</h2>
-            <form method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    {{ form.username.label_tag }}
-                    {{ form.username }}
-                </div>
-                <div class="form-group">
-                    {{ form.password.label_tag }}
-                    {{ form.password }}
-                </div>
-                <button type="submit" class="btn btn-primary w-100 mt-3">ログイン</button>
-            </form>
-        </div>
+        <h1>ログイン</h1>
+
+        <form method="post">
+            {% csrf_token %}
+            <label class="kamofield mb-2" data-rule="required">
+                <span class="label"><span>ユーザー名</span></span>
+                <input type="text" id="username" name="username" placeholder="ユーザー名を入力してください"/>
+            </label>
+
+            <label class="kamofield">
+                <span class="label"><span>パスワード</span></span>
+                <input type="password" name="password" placeholder="パスワードを入力してください"/>
+            </label>
+
+
+
+            <input class="button" type="submit" value="ログイン" />
+        </form>
     </div>
-</div>
-    <style>
-        .custom-card {
-            width: 60rem;
-            margin-top: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            border: none;
-            padding: 2rem;
-        }
+</section>
+<style>
+    @font-face {
+        font-family: 'KanjukuGothic';
+        src: url('{% static "fonts/かんじゅくゴシック.otf" %}') format('opentype');
+    }
 
-        .card-title {
-            margin-bottom: 1.5rem;
-        }
+    section#login {
+        background: #efefef;
+        font-size: 62.5%;
+        font-family: 'Lato', sans-serif;
+        font-weight: 300;
+        color: #B6B6B6;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
 
-        .form-group {
-            margin-bottom: 1rem;
-        }
+    .custom-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 80%;
+        max-width: 600px;
+        text-align: center;
+        font-family: 'KanjukuGothic', 'Lato', sans-serif;
+    }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-        }
+    .custom-card h1 {
+        margin-bottom: 1.5rem;
+        font-size: 2.5em;
+        font-family: 'KanjukuGothic', 'Lato', sans-serif;
+        font-weight: 100;
+    }
 
-        .form-group input {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #ced4da;
-            border-radius: 0.25rem;
-        }
+    .custom-card form {
+        width: 100%;
+    }
 
-        @media (max-width: 600px) {
-            .custom-card {
-                width: 24rem;
-            }
-        }
-    </style>
-{% endblock %}
+    .custom-card input[type="submit"] {
+        margin-top: 20px;
+        background: #1d4ed8;
+        color: #c9f0ff;
+        -webkit-appearance: none;
+        border: none;
+        position: relative;
+        padding: 13px 50px;
+        font-size: 1.4em;
+        letter-spacing: 0.1em;
+        font-family: 'Lato', sans-serif;
+        font-weight: 300;
+        transition: all 333ms ease-in-out;
+        border-radius: 5px;
+    }
+
+    .custom-card input[type="submit"]:hover {
+        background: #718cd5;
+        color: #ffffff;
+    }
+
+    .custom-card input[type="submit"]:focus {
+        outline: none;
+        background: rgba(29, 78, 216, 0.8);
+    }
+</style>
+
+{% endblock content %}

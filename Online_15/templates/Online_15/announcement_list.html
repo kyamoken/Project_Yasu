@@ -1,0 +1,14 @@
+{% extends 'Online_15/base.html' %}
+
+{% block content %}
+<section style="text-align: center; margin: 0 auto; max-width: 800px;">
+    <h2>お知らせ</h2>
+    {% for announcement in announcements %}
+        <div class="announcement" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; margin: 20px 0; border-radius: 8px; background-color: #fff;">
+            <h3>{{ announcement.title }}</h3>
+            <p>{{ announcement.content }}</p>
+            <p><small>{{ announcement.created_at }}</small></p>
+        </div>
+    {% endfor %}
+</section>
+{% endblock %}

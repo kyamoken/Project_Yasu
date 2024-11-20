@@ -70,6 +70,9 @@ body {
 }
 
 .menu-toggle {
+    padding: 0;
+    background: none;
+    border: none;
     cursor: pointer;
 }
 
@@ -246,7 +249,8 @@ body {
     background-color: #ff4d4d;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 20px
+;
     text-align: center;
     text-decoration: none;
     display: inline-block;
