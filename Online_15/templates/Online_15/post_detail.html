@@ -23,7 +23,6 @@
             {% endif %}
             <span id="like-count">{{ post.likes }}</span>
         </div>
-    <p>{{ post.user }}</p>
 {% if user.is_authenticated and user.pk == post.user.pk %}
     <button id="post-delete-button" class="delete-button">削除</button>
 
