@@ -310,7 +310,7 @@ body {
     color: #fff;
     background: #22223b;
     border-radius: 15px;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
     border: 3px solid #9a8c98;
     padding: 10px;
     display: flex;
@@ -318,6 +318,9 @@ body {
     justify-content: center;
     height: 32px;
     margin: 0 auto; /* 中央に配置 */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 #date {
