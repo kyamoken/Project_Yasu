@@ -48,11 +48,9 @@ class CommentLike(models.Model):
         unique_together = ('user', 'comment')  # ユーザーとコメントの組み合わせは一意
 
 class Announcement(models.Model):
-    title = models.CharField(max_length=255)  # タイトル
-    content = models.TextField()  # 本文
-    created_at = models.DateTimeField(auto_now_add=True)  # 作成日時
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # 作成者
+    title = models.CharField(max_length=255)  # タイトル  Char fieldは最大文字数を指定する必要がある。データベースではVARCHAR型になる
+    content = models.TextField()  # 本文 Text fieldは文字数制限がない。データベースではTEXT型になる
+    created_at = models.DateTimeField(auto_now_add=True)  # 作成日時　Datatimefieldは日時を指定する auto_now_add=Trueはレコードが作成された時の日時を自動で入れる
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # 作成者　settings.AUTH_USER_MODELはDjangoのデフォルトのユーザーモデルを指す
 
-    def __str__(self):
-        return self.title
 

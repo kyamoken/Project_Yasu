@@ -24,10 +24,11 @@
             <span id="like-count">{{ post.likes }}</span>
         </div>
 {% if user.is_authenticated and user.pk == post.user.pk %}
-    <form id="delete-form" action="{% url 'post_delete' post.id %}" method="post">
-        {% csrf_token %}
-        <button type="submit" class="delete-button">削除</button>
-    </form>
+    <button id="post-delete-button" class="delete-button">削除</button>
+{#    <form id="delete-form" action="{% url 'post_delete' post.id %}" method="post">#}
+{#        {% csrf_token %}#}
+{#        <button type="submit" class="delete-button">削除</button>#}
+{#    </form>#}
 {% endif %}
     </div>
 
@@ -154,13 +155,12 @@
         });
     });
 
-    document.getElementById('delete-form').addEventListener('submit', function(event) {
-        event.preventDefault();
+    document.querySelector('#post-delete-button').addEventListener('click', () => {
         if (confirm('本当にこの投稿を削除してもよろしいですか？')) {
-            fetch(this.action, {
+            fetch('{% url 'post_delete' post.id %}', {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': this.querySelector('[name=csrfmiddlewaretoken]').value
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
                 }
             }).then(response => {
                 if (response.ok) {
@@ -172,6 +172,25 @@
             });
         }
     });
+
+    {#document.getElementById('delete-form').addEventListener('submit', function(event) {#}
+    {#    event.preventDefault()#}
+    {#    if (confirm('本当にこの投稿を削除してもよろしいですか？')) {#}
+    {#        fetch(this.action, {#}
+    {#            method: 'POST',#}
+    {#            headers: {#}
+    {#                'X-CSRFToken': this.querySelector('[name=csrfmiddlewaretoken]').value#}
+    {#            }#}
+    {#        }).then(response => {#}
+    {#            if (response.ok) {#}
+    {#                alert('削除に成功しました');#}
+    {#                document.querySelector('.post-box').remove();#}
+    {#            } else {#}
+    {#                alert('削除に失敗しました');#}
+    {#            }#}
+    {#        });#}
+    {#    }#}
+    {#});#}
 </script>
 {% endif %}
 {% endblock %}

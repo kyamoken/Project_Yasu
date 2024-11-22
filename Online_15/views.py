@@ -163,11 +163,12 @@ class ContactView(FormView):
         return super().form_valid(form)
 
 
-class AnnouncementListView(ListView):
-    model = Announcement
-    template_name = 'Online_15/announcement_list.html'
-    context_object_name = 'announcements'
-    ordering = ['-created_at']
+class AnnouncementListView(ListView):  # Announcementモデルのリスト表示を行うクラスベースビュー
+    model = Announcement  # 表示対象のモデルをAnnouncementに指定
+    template_name = 'Online_15/announcement_list.html'  # 使用するテンプレートを指定
+    context_object_name = 'announcements'  # テンプレートで使用するオブジェクト名を指定、HTMLで読み込むときの名前
+    ordering = ['-created_at']  # 作成した日が新しいものが上にくるように並び替え
+
 
 class AnnouncementCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Announcement

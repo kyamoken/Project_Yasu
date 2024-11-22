@@ -81,7 +81,7 @@
             } else {
                 firstInvalidField.querySelector('input, textarea, select').focus();
             }
-        });
+        });　
 
         /**
         * ルールのメッセージ
