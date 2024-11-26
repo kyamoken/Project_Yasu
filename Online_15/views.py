@@ -20,13 +20,13 @@ class HomePageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         posts = Post.objects.all()
-        paginator = Paginator(posts, 12)
+        paginator = Paginator(posts, 8)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
-        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            posts_list = list(page_obj.object_list.values('id', 'title', 'content', 'Image'))
-            return JsonResponse({'posts': posts_list, 'has_next': page_obj.has_next()})
+        # if self.request.GET.get('format') == 'json':
+        #     posts_list = list(page_obj.object_list.values('id', 'title', 'content', 'Image'))
+        #     return JsonResponse({'posts': posts_list, 'has_next': page_obj.has_next()})
 
         context['page_obj'] = page_obj
         return context
@@ -70,20 +70,22 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 
-class PostCreateView(LoginRequiredMixin, CreateView):
-    model = Post
-    form_class = PostForm
-    template_name = 'Online_15/post_edit.html'
+class PostCreateView(LoginRequiredMixin, CreateView):  # ログイン必須で新しい投稿を作成するビュー
+    # LoginRequiredMixin: ログインしていないユーザーをログインページにリダイレクトする機能
+    # CreateView: モデルを使って新しいオブジェクト(投稿)を作成するビュー
+    model = Post  # 関連付けるモデルを`Post`に指定
+    form_class = PostForm  # 使用するフォームクラスを指定
+    template_name = 'Online_15/post_edit.html'  # 使用するテンプレートを指定
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        response = super().form_valid(form)
+    def form_valid(self, form):  # フォームが有効な場合の処理をカスタマイズ
+        form.instance.user = self.request.user  # 投稿を作成したユーザーを現在のログインユーザーに設定
+        response = super().form_valid(form)  # 親クラスの`form_valid`メソッドを呼び出して保存処理を実行
 
-        messages.success(self.request, '投稿が完了しました。')
-        return response
+        messages.success(self.request, '投稿が完了しました。')  # 投稿が成功したことをユーザーに通知(アラートで表示)
+        return response  # 結果を返す　この場合の結果は投稿が成功したことと、ログインユーザー等の情報
 
-    def get_success_url(self):
-        return reverse('home')
+    def get_success_url(self):  # フォーム送信後のリダイレクト先を指定 リダイレクトとはページを自動で移動すること
+        return reverse('home')  # リダイレクト先を`home`ビューに設定 リンクの逆引きをしっかりと設定している
 
 
 class SignUpView(CreateView):

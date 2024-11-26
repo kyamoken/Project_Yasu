@@ -11,10 +11,9 @@ class Post(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  # ユーザー
     title = models.CharField(max_length=255)  # タイトル
     content = models.TextField()  # 本文
-    Image = models.ImageField(upload_to='images/', blank=True, null=True)  # 画像
+    Image = models.ImageField(upload_to='images/', blank=True, null=True)  # 画像 project_YASU/media/images/に保存 空でもいいけど、空の時の条件もある
     posted_at = models.DateTimeField(auto_now_add=True)  # 投稿日時
     likes = models.IntegerField(default=0)  # いいね数
-    share_link = models.URLField(blank=True, null=True)  # シェアリンク
     comment_count = models.IntegerField(default=0)  # コメント数
 
 

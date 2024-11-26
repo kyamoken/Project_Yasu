@@ -38,12 +38,15 @@
         {% endfor %}
     </div>
 
-    <div class="pagination">
-        <a class="pagination__next" href="?page=2"></a>
-    </div>
-    <button id="load-more-button" class="load-more">もっと見る</button>
-    <div id="loading" style="display: none;">ロード中...</div>
+    {% if page_obj.has_next %}
+        <div class="pagination">
+            <a class="pagination__next" href="?page={{ page_obj.next_page_number }}"></a>
+        </div>
+    <button id="load-more-button" class="load-more" style="margin-top: 10px;">もっと見る</button>
+    {% endif %}
     <div id="end-message" style="display: none;">ここが最後のページです！</div>
+
+    <div id="loading" style="display: none;">ロード中...</div>
 </div>
 {% endblock %}
 
@@ -64,12 +67,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     infScroll.on('load', function(response) {
+        console.log(response);
+
         if (response.posts && response.posts.length > 0) {
             // 表示用処理
         } else {
-            infScroll.destroy();
-            loadMoreButton.style.display = 'none';
-            endMessage.style.display = 'block';
+            {#infScroll.destroy();#}
+            {#loadMoreButton.style.display = 'none';#}
+            {#endMessage.style.display = 'block';#}
         }
     });
 

@@ -1,26 +1,53 @@
-{% extends 'Online_15/base.html' %}
+{% extends 'Online_15/base.html' %} {# base.htmlを継承しています #}
 
-{% block title %}新規投稿{% endblock %}
+{% block title %}新規投稿{% endblock %} {# タイトルを設定しています #}
 
-{% block content %}
+{% block content %} {# contentを設定　baseのコンテンツを表示するとまずいので上書きするために記述している。 #}
 <div class="content d-flex justify-content-center align-items-center" style="height: 100vh;">
+    {# ページ全体を縦横中央に配置するコンテナ #}
     <div class="post-card">
+        {# 投稿フォームを囲むデザイン用のカード #}
+
         <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
+            {# フォームをPOSTメソッドで送信し、ファイルアップロードに対応 #}
+            {# enctypeは画像を送信するときにエラーを起こさないようにするためのコード #}
+            {% csrf_token %} {# CSRF対策用のトークンを挿入 必須！！！ #}
             <div class="mb-3">
-                <label for="id_title">タイトル</label>
-                {{ form.title }}
+                <label for="id_title">タイトル</label> {# タイトル入力フィールドのラベル #}
+                {{ form.title }} {# views と forms で定義しておいた内容から title という要素を呼び出している #}
             </div>
             <div class="mb-3">
-                <label for="id_content">内容</label>
-                {{ form.content }}
+                <label for="id_content">内容</label> {# 内容入力フィールドのラベル #}
+                {{ form.content }} {# views と forms で定義しておいた内容から content という要素を呼び出している #}
             </div>
             <div class="mb-3">
-                <label for="id_Image">画像</label>
-                {{ form.Image.as_widget }}
+                <label for="id_Image">画像</label> {# 画像アップロード用フィールドのラベル #}
+                {{ form.Image.as_widget }} {# views と forms で定義しておいた内容から Image という要素を呼び出している #}
             </div>
-            <button type="submit" class="btn btn-primary">投稿</button>
+            <button type="submit" class="btn btn-primary">投稿</button> {# フォーム送信ボタン #}
         </form>
     </div>
 </div>
-{% endblock %}
+    <style> {# CSSを直接記述しています #}
+        /* カード内の題名のフォントサイズとマージン設定 */
+        .post-card h3 {
+            font-size: 1.5rem; /* フォントサイズを設定 */
+            margin-bottom: 10px; /* 下に余白を設定 */
+        }
+        /* フォームラベルのスタイル設定 */
+        .post-card label {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        /* 入力フィールドとテキストエリアの共通スタイル設定 */
+        .post-card input,
+        .post-card textarea {
+            width: 100%; /* フィールドを横幅いっぱいにする */
+            padding: 10px; /* 内側の余白を設定 */
+            margin-bottom: 10px; /* 下に余白を設定 */
+            border: 1px solid #ccc; /* フィールドの枠線を設定 */
+            border-radius: 4px; /* 角を丸くする */
+        }
+    </style>
+{% endblock %} {# contentブロックの終了 #}

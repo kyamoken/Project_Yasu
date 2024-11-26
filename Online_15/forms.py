@@ -7,11 +7,11 @@ from .models import Post, CustomUser, Comment, Announcement
 
 class PostForm(forms.ModelForm):
     class Meta:
-        model = Post
-        fields = ['title', 'content', 'Image']
+        model = Post # どのモデルを使うか記載する
+        fields = ['title', 'content', 'Image'] # ここにある３種類の
         widgets = {
-            'content': forms.Textarea(attrs={'rows': 6, 'style': 'resize:none;'}),
-        }
+            'content': forms.Textarea(attrs={'rows': 6, 'style': 'resize:none;'}), #resizeはテキストエリアのサイズ変更を禁止する
+        } # 内容(contentのデザインを変更する部分)
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:

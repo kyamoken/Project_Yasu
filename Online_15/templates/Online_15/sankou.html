@@ -3,123 +3,110 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>広告表示ページ</title>
+  <title>わにわにパニック - TypeScript</title>
   <style>
-
-
-    /* 共通のスタイル */
-
-    .container {
-      background-color: #dddddd;
-      display: flex;
-      justify-content: space-around;
-      align-items: flex-start;
-      height: 1000px;
-    }
-
-    .ad-top, .ad-bottom {
-      border: solid 3px #000;
-    }
-
-    /* ad-top 固有のスタイル */
-    .ad-top {
-      position: sticky;
-      position: -webkit-sticky;
-      top: 0;
-      opacity: 0;
-      animation: fadein 1s 6s forwards; /* 6秒後に1秒かけてフェードイン */
-    }
-
-    /* ad-bottom 固有のスタイル */
-    .ad-bottom {
-      position: sticky;
-      position: -webkit-sticky;
-      bottom: 1rem;
-      align-self: flex-end;
-    }
-
-    /* フェードインアニメーション */
-    @keyframes fadein {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
-    /* ポップアップ関連スタイル */
-    #popup-close {
-      display: none;
-    }
-
-    #popup-close:checked + .popup {
-      display: none;
-    }
-
-    .popup {
-      box-sizing: border-box;
-      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      margin: auto;
-      width: 50vw;
-      height: 50vh;
-      background: #fff;
-    }
-
-    .popup-content {
-      height: 100%;
-      margin: 5px;
+    body {
+      margin: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      position: relative;
+      height: 100vh;
+      background-color: #f4f4f4;
+      font-family: Arial, sans-serif;
     }
-
-    .icon-close {
-      background: #000;
-      color: #fff;
-      font-size: 20px;
+    canvas {
+      border: 2px solid #333;
+      background-color: #98fb98;
+    }
+    #score {
       position: absolute;
-      top: 5px;
-      right: 5px;
-      cursor: pointer;
-      padding: 5px;
-      border-radius: 50%;
+      top: 10px;
+      left: 10px;
+      font-size: 20px;
+      font-weight: bold;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border-radius: 5px;
     }
   </style>
+  <!-- tslib（TypeScriptランタイム）をインポート -->
+  <script src="https://unpkg.com/tslib"></script>
+  <script src="https://cdn.jsdelivr.net/npm/typescript@latest/lib/typescript.min.js"></script>
 </head>
 <body>
+  <div id="score">わにわにパニック スコア: 0</div>
+  <canvas id="gameCanvas" width="500" height="500"></canvas>
+  <script type="ts">
+    // Canvas要素とスコア表示の取得
+    const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    const scoreDisplay = document.getElementById("score")!;
 
-  <div class="container ad-container-top">
-    <div class="ad-top">
-      <p>よこくらこうき</p>
-    </div>
-  </div>
+    // 穴のサイズと位置
+    const holeSize: number = 100;
+    const holePositions: { x: number, y: number }[] = [
+      { x: 100, y: 100 },
+      { x: 300, y: 100 },
+      { x: 100, y: 300 },
+      { x: 300, y: 300 }
+    ];
 
-  <div class="container ad-container-bottom">
-    <div class="ad-bottom">
-      <p>てるやまかえで</p>
-    </div>
-  </div>
+    let activeHole: number | null = null;
+    let score: number = 0;
 
-  <div class="container ad-container-top">
-    <div class="ad-top">
-      <p>かなざわけんと</p>
-    </div>
-  </div>
+    // 穴の描画
+    function drawHoles(): void {
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // 画面をクリア
+      holePositions.forEach((pos, index) => {
+        ctx.fillStyle = index === activeHole ? "red" : "brown";
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, holeSize / 2, 0, Math.PI * 2); // 穴の描画
+        ctx.fill();
+      });
+    }
 
-  <div class="container ad-container-top">
-    <div class="ad-top">
-      <p>やまださとし</p>
-    </div>
-  </div>
+    // ランダムに穴を出現させる
+    function randomizeHole(): void {
+      activeHole = Math.floor(Math.random() * holePositions.length);
+      drawHoles();
+    }
 
+    // クリックした場所が当たりかチェック
+    function checkHit(x: number, y: number): void {
+      if (activeHole === null) return;
+      const pos = holePositions[activeHole];
+      const distance = Math.sqrt((x - pos.x) ** 2 + (y - pos.y) ** 2);
+      if (distance < holeSize / 2) {
+        score++;
+        scoreDisplay.textContent = `わにわにパニック スコア: ${score}`;
+        activeHole = null;
+        drawHoles();
+        setTimeout(randomizeHole, 500);
+      }
+    }
 
+    // ゲーム開始とクリックイベントの処理
+    canvas.addEventListener("click", (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const x: number = e.clientX - rect.left;
+      const y: number = e.clientY - rect.top;
+      checkHit(x, y);
+    });
+
+    // ゲームのメインループ
+    function startGame(): void {
+      randomizeHole();
+      setInterval(() => {
+        if (activeHole !== null) {
+          activeHole = null;
+          drawHoles();
+        }
+        randomizeHole();
+      }, 2000);
+    }
+
+    // ゲームを開始
+    startGame();
+  </script>
 </body>
 </html>
