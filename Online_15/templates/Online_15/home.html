@@ -89,10 +89,12 @@ document.addEventListener('DOMContentLoaded', function() {
         endMessage.style.display = 'block';
     });
 
-    loadMoreButton.addEventListener('click', function() {
+    loadMoreButton?.addEventListener('click', function() {
         infScroll.loadNextPage();
     });
-
+});
+</script>
+<script>
     document.querySelectorAll('.like-button').forEach(button => {
         button.addEventListener('click', function(event) {
             event.preventDefault();
@@ -122,6 +124,5 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error:', error));
         });
     });
-});
 </script>
 {% endblock %}
