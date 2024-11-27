@@ -1,46 +1,44 @@
-{% extends 'Online_15/base.html' %}
-{% load static %}
+{% extends 'Online_15/base.html' %} <!-- ベースを継承する -->
+{% load static %} <!-- static ファイルを読み込む -->
 
-{% block title %}マイページ{% endblock %}
+{% block title %}マイページ{% endblock %} <!-- タイトルを設定 -->
 
-{% block content %}
-<div class="content">
-    <div class="profile-header text-center">
-        <h2>{{ request.user.username }}のマイページ</h2>
+{% block content %} <!-- コンテンツを設定 -->
+<div class="content"> <!-- コンテンツを中央揃え -->
+    <div class="profile-header text-center"> <!-- プロフィールヘッダー -->
+        <h2>{{ request.user.username }}のマイページ</h2> <!-- ユーザー名を表示 -->
     </div>
 
-    <!-- ユーザーの投稿の表示 -->
-    <div class="posts">
-        {% for post in page_obj %}
-            <div class="post">
-                <a href="{% url 'post_detail' post.id %}" class="post-link">
-                    <h3>{{ post.title|slice:":10" }}</h3>
-                    {% if post.Image %}
-                        <img src="{{ post.Image.url }}" alt="{{ post.title }}">
+    <div class="posts"> <!-- ユーザーの投稿の表示 -->
+        {% for post in page_obj %} <!-- 投稿を1つずつ表示、データベースの投稿の数分だけ投稿を表示するために　for を使用 -->
+            <div class="post"> <!-- 投稿の表示 -->
+                <a href="{% url 'post_detail' post.id %}" class="post-link"> <!-- 投稿詳細へのリンク -->
+                    <h3>{{ post.title|slice:":10" }}</h3> <!-- 投稿のタイトルを表示 最大表示文字数は10文字 -->
+                    {% if post.Image %} <!-- 投稿に画像がある場合画像を表示し、画像がない場合、デフォ画像を表示 -->
+                        <img src="{{ post.Image.url }}" alt="{{ post.title }}"> <!-- 投稿の画像を表示 -->
                     {% else %}
-                        <img src="{% static 'default_image.jpg' %}" alt="デフォルト画像">
+                        <img src="{% static 'default_image.jpg' %}" alt="デフォルト画像"> <!-- デフォルト画像を表示 -->
                     {% endif %}
-                    <p>{{ post.content|slice:":30" }}</p>
+                    <p>{{ post.content|slice:":30" }}</p> <!-- 投稿の内容を表示 最大表示文字数は30文字 -->
                 </a>
             </div>
-        {% endfor %}
+        {% endfor %} <!-- 投稿の表示を投稿数分だけ終えたら繰り返しの終了 -->
     </div>
 
-    <!-- ページング機能 -->
-    <div class="pagination text-center">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
+    <div class="pagination text-center"> <!-- ページネーション -->
+        <span class="step-links"> <!-- ページネーションのリンク -->
+            {% if page_obj.has_previous %} <!-- 前のページがある場合、前のページへのリンクを表示 -->
                 <a href="?page=1">&laquo; 最初のページ</a>
-                <a href="?page={{ page_obj.previous_page_number }}">前のページ</a>
+                <a href="?page={{ page_obj.previous_page_number }}">前のページ</a> <!-- 前のページへのリンク -->
             {% endif %}
 
-            <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            <span class="current"> <!-- 現在のページ番号を表示 -->
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}. <!-- 現在のページ番号と総ページ数を表示 -->
             </span>
 
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">次のページ</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">最後のページ &raquo;</a>
+            {% if page_obj.has_next %} <!-- 次のページがある場合、次のページへのリンクを表示 -->
+                <a href="?page={{ page_obj.next_page_number }}">次のページ</a> <!-- 次のページへのリンク -->
+                <a href="?page={{ page_obj.paginator.num_pages }}">最後のページ &raquo;</a> <!-- 最後のページへのリンク -->
             {% endif %}
         </span>
     </div>
@@ -48,47 +46,47 @@
 
 <style>
     .content {
-        display: flex;
-        flex-direction: column;
+        display: flex; /* フレックスボックスというレイアウト方式を使用、いい感じのサイズ感で要素を配置できる */
+        flex-direction: column; /* 縦方向に要素を配置 */
         align-items: center; /* 中央揃え */
     }
     .profile-header {
-        background-color: #f8f9fa;
-        padding: 30px;
-        border-radius: 10px;
-        margin-bottom: 30px;
+        background-color: #f8f9fa; /* 背景色を設定 */
+        padding: 30px; /* 内側の余白を追加 */
+        border-radius: 10px;  /* 角丸を追加 */
+        margin-bottom: 30px; /* 外側下の余白を追加 */
         text-align: center; /* タイトルとテキストを中央揃え */
         box-shadow: #1f2937 0 1px; /* 影を追加 */
     }
     .post-link {
-        color: inherit;
-        text-decoration: none;
+        color: inherit; /* リンクの色を親要素の色に合わせる 親要素とは、この場合は a タグの親要素である h3 タグの色 */
+        text-decoration: none; /* リンクの下線を消す */
     }
-    .post-link:hover {
-        color: inherit;
+    .post-link:hover { /* マウスオーバー時のスタイル */
+        color: inherit; /* リンクの色を親要素の色に合わせる 親要素とは、この場合は a タグの親要素である h3 タグの色 */
     }
-    .pagination {
-        display: flex;
+    .pagination { /* ページネーション */
+        display: flex; /* フレックスボックスというレイアウト方式を使用、いい感じのサイズ感で要素を配置できる */
         justify-content: center; /* ページネーションを中央揃え */
-        margin-top: 20px;
+        margin-top: 20px; /* 外側上の余白を追加 */
     }
-    .step-links a {
-        margin: 0 5px;
-        text-decoration: none;
-        padding: 5px 10px;
-        border: 1px solid #dee2e6;
-        border-radius: 5px;
-        background-color: #f8f9fa;
+    .step-links a { /* ページネーションのリンク */
+        margin: 0 5px; /* 左右の余白を追加 */
+        text-decoration: none; /* リンクの下線を消す */
+        padding: 5px 10px; /* 内側の余白を追加 */
+        border: 1px solid #dee2e6; /* 枠線を追加 */
+        border-radius: 5px; /* 角丸を追加 */
+        background-color: #f8f9fa; /* 背景色を設定 */
     }
-    .step-links a:hover {
-        background-color: #e2e6ea;
+    .step-links a:hover { /* マウスオーバー時のスタイルこの要素はマウスオーバーされた時のスタイル、マウスオーバーとは、カーソルが要素に乗った時のこと */
+        background-color: #e2e6ea; /* 背景色を設定 */
     }
-    .step-links .current {
-        margin: 0 5px;
-        padding: 5px 10px;
-        border: 1px solid #dee2e6;
-        border-radius: 5px;
-        background-color: #e9ecef;
+    .step-links .current { /* 現在のページ番号 */
+        margin: 0 5px; /* 左右の余白を追加 */
+        padding: 5px 10px; /* 内側の余白を追加 */
+        border: 1px solid #dee2e6;    /* 枠線を追加 */
+        border-radius: 5px; /* 角丸を追加 */
+        background-color: #e9ecef; /* 背景色を設定 */
     }
 </style>
 {% endblock %}

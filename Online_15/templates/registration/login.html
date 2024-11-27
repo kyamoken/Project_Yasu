@@ -1,22 +1,22 @@
-{% extends 'Online_15/base.html' %}
-{% load static %}
+{% extends 'Online_15/base.html' %} <!-- ベースを継承する -->
+{% load static %} <!-- static ファイルを読み込む -->
 
-{% block title %}Login{% endblock %}
-{% block content %}
-<section id="login">
-    <div class="card custom-card">
-        <h1>ログイン</h1>
+{% block title %}Login{% endblock %} <!-- タイトルを設定 -->
+{% block content %} <!-- コンテンツを設定 -->
+<section id="login"> <!-- ログインセクション、スタイルが崩れるのを防ぐよ！ -->
+    <div class="card custom-card"> <!-- カードのスタイルを適用 -->
+        <h1>ログイン</h1> <!-- ログインタイトル -->
 
-        <form method="post">
+        <form method="post"> <!-- ログインフォーム -->
             {% csrf_token %}
-            <label class="kamofield mb-2" data-rule="required">
-                <span class="label"><span>ユーザー名</span></span>
-                <input type="text" id="username" name="username" placeholder="ユーザー名を入力してください"/>
+            <label class="kamofield mb-2" data-rule="required"> <!-- ユーザー名入力フォーム -->
+                <span class="label"><span>ユーザー名</span></span> <!-- ユーザー名ラベル -->
+                <input type="text" id="username" name="username" placeholder="ユーザー名を入力してください"/> <!-- ユーザー名入力フォーム -->
             </label>
 
-            <label class="kamofield">
-                <span class="label"><span>パスワード</span></span>
-                <input type="password" name="password" placeholder="パスワードを入力してください"/>
+            <label class="kamofield"> <!-- パスワード入力フォーム -->
+                <span class="label"><span>パスワード</span></span>  <!-- パスワードラベル -->
+                <input type="password" name="password" placeholder="パスワードを入力してください"/> <!-- パスワード入力フォーム -->
             </label>
 
 
@@ -26,69 +26,69 @@
     </div>
 </section>
 <style>
-    @font-face {
-        font-family: 'KanjukuGothic';
-        src: url('{% static "fonts/かんじゅくゴシック.otf" %}') format('opentype');
+    @font-face { /* カスタムフォントを読み込む */
+        font-family: 'KanjukuGothic'; /* 今回は前ページ共通で完熟ゴシックを採用した */
+        src: url('{% static "fonts/かんじゅくゴシック.otf" %}') format('opentype'); /* カスタムフォントのパスを指定 */
     }
 
-    section#login {
-        background: #efefef;
-        font-size: 62.5%;
-        font-family: 'Lato', sans-serif;
-        font-weight: 300;
-        color: #B6B6B6;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
+    section#login { /* ログインセクションのスタイル */
+        background: #efefef; /* 背景色を設定 */
+        font-size: 62.5%;/* フォントサイズを設定 */
+        font-family: 'Lato', sans-serif; /* フォントを設定 */
+        font-weight: 300; /* フォントウェイトとは文字の太さを指定するプロパティ */
+        color: #B6B6B6; /* テキストカラーを設定 */
+        display: flex; /* フレックスボックスというレイアウト方式を使用、いい感じのサイズ感で要素を配置できる */
+        justify-content: center; /* 要素を中央揃え */
+        align-items: center; /* 要素を中央揃え */
+        min-height: 100vh; /* 最低の高さを設定 */
     }
 
-    .custom-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        width: 80%;
-        max-width: 600px;
-        text-align: center;
-        font-family: 'KanjukuGothic', 'Lato', sans-serif;
+    .custom-card { /* カスタムカードのスタイル */
+        background: white; /* 背景色を設定 */
+        padding: 2rem; /* 内側の余白を追加 */
+        border-radius: 10px; /* 角丸を追加 */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 影を追加 */
+        width: 80%; /* 幅を設定 */
+        max-width: 600px; /* 最大幅を設定 */
+        text-align: center; /* テキストを中央揃え */
+        font-family: 'KanjukuGothic', 'Lato', sans-serif; /* フォントを追加 */
     }
 
-    .custom-card h1 {
-        margin-bottom: 1.5rem;
-        font-size: 2.5em;
-        font-family: 'KanjukuGothic', 'Lato', sans-serif;
-        font-weight: 100;
+    .custom-card h1 { /* カスタムカードのタイトルスタイル */
+        margin-bottom: 1.5rem; /* 下の余白を追加 */
+        font-size: 2.5em; /* フォントサイズを設定 */
+        font-family: 'KanjukuGothic', 'Lato', sans-serif; /* フォントを追加 */
+        font-weight: 100; /* フォントウェイトとは文字の太さを指定するプロパティ */
     }
 
-    .custom-card form {
-        width: 100%;
+    .custom-card form { /* カスタムカードのフォームスタイル */
+        width: 100%; /* 幅を設定 */
     }
 
-    .custom-card input[type="submit"] {
-        margin-top: 20px;
-        background: #1d4ed8;
-        color: #c9f0ff;
-        -webkit-appearance: none;
-        border: none;
-        position: relative;
-        padding: 13px 50px;
-        font-size: 1.4em;
-        letter-spacing: 0.1em;
-        font-family: 'Lato', sans-serif;
-        font-weight: 300;
-        transition: all 333ms ease-in-out;
-        border-radius: 5px;
+    .custom-card input[type="submit"] { /* カスタムカードのサブミットボタンスタイル */
+        margin-top: 20px; /* 上の余白を追加 */
+        background: #1d4ed8; /* 背景色を設定 */
+        color: #c9f0ff; /* テキストカラーを設定 */
+        -webkit-appearance: none; /* ボタンのデフォルトのスタイルを無効化 */
+        border: none; /* ボーダーを削除 */
+        position: relative; /* 相対位置を設定 */
+        padding: 13px 50px; /* 内側の余白を追加 */
+        font-size: 1.4em; /* フォントサイズを設定 */
+        letter-spacing: 0.1em; /* 文字間を設定 */
+        font-family: 'Lato', sans-serif; /* フォントを設定 */
+        font-weight: 300; /* フォントウェイトとは文字の太さを指定するプロパティ */
+        transition: all 333ms ease-in-out; /* トランジションを設定 */
+        border-radius: 5px; /* 角丸を追加 */
     }
 
-    .custom-card input[type="submit"]:hover {
-        background: #718cd5;
-        color: #ffffff;
+    .custom-card input[type="submit"]:hover { /* カスタムカードのサブミットボタンホバースタイル */
+        background: #718cd5; /* 背景色を設定 */
+        color: #ffffff; /* テキストカラーを設定 */
     }
 
-    .custom-card input[type="submit"]:focus {
-        outline: none;
-        background: rgba(29, 78, 216, 0.8);
+    .custom-card input[type="submit"]:focus { /* カスタムカードのサブミットボタンフォーカススタイル */
+        outline: none; /* フォーカス時のアウトラインを削除 */
+        background: rgba(29, 78, 216, 0.8); /* 背景色を設定 */
     }
 </style>
 
