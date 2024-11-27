@@ -13,7 +13,7 @@
         {% for post in page_obj %}
             <div class="post">
                 <a href="{% url 'post_detail' post.id %}" class="post-link">
-                    <h3>{{ post.title|slice:":10" }}</h3>
+                    <h3>{{ post.title|slice:":9" }}</h3>
                     {% if post.Image %}
                         <img src="{{ post.Image.url }}" alt="Post Image">
                     {% else %}

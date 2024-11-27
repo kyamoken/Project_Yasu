@@ -13,17 +13,25 @@ from django.http import JsonResponse, HttpResponseRedirect
 from .models import Post, CustomUser, Like, Comment, CommentLike, Announcement
 from .forms import PostForm, CustomUserCreationForm, ContactForm, CommentForm, AnnouncementForm
 
+from django.views.generic import TemplateView
+from django.core.paginator import Paginator
+from .models import Post
+
 
 class HomePageView(TemplateView):
     template_name = 'Online_15/home.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        posts = Post.objects.all()
-        paginator = Paginator(posts, 8)
+
+        # 投稿を作成日時順（降順）で取得
+        posts = Post.objects.all().order_by('-posted_at')  # created_at を投稿モデルの日時フィールドに置き換える
+
+        paginator = Paginator(posts, 8)  # 1ページに8件表示
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
+        # JSON形式でのレスポンスを用意（コメントアウト部分を残したまま）
         # if self.request.GET.get('format') == 'json':
         #     posts_list = list(page_obj.object_list.values('id', 'title', 'content', 'Image'))
         #     return JsonResponse({'posts': posts_list, 'has_next': page_obj.has_next()})
