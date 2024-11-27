@@ -84,21 +84,19 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.4); /* 背景色 */
-    backdrop-filter: blur(10px); /* 背景をぼかす */
-    opacity: 0; /* 初期状態では透明 */
-    visibility: hidden; /* 初期状態では不可視 */
-    transition: opacity 0.5s, visibility 0.5s; /* アニメーション効果 */
+    background-color: rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
 }
 
-/* モーダルの画像スタイル */
 .modal-content {
     display: block;
     width: 80%;
     max-width: 700px;
 }
 
-/* モーダルの閉じるボタン */
 #close {
     position: absolute;
     top: 15px;
@@ -108,63 +106,94 @@
     font-weight: bold;
     cursor: pointer;
 }
-    {#ここまでが画像詳細表示のやつ#}
-    .content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
 
-    .post-box, .comment-box {
-        width: 800px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        margin: 20px auto;
-    }
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-    .post-image {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-        border-radius: 8px;
-        margin-bottom: 10px;
-    }
+.post-box, .comment-box {
+    width: 800px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin: 20px auto;
+}
 
-    .comments-section {
-        width: 800px;
-        margin-top: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+.post-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
 
-    .comment-box {
-        width: 100%;
-        margin-top: 10px;
-        border-radius: 10px;
-    }
+.comments-section {
+    width: 800px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-    .submit-button {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 8px;
-        cursor: pointer;
-    }
+.comment-box {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 10px;
 
-    .submit-button:hover {
-        background-color: #0056b3;
-    }
+}
 
-    @media (max-width: 800px) {
-        .post-box, .comments-section {
-            width: 90%;
-        }
+.submit-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+/* コメント入力フォームの調整 */
+form input, form textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    resize: none;
+}
+
+form input:focus, form textarea:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.like-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.like-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+@media (max-width: 800px) {
+    .post-box, .comments-section {
+        width: 90%;
     }
+}
 </style>
+
 
 {% if user.is_authenticated %}
 <script>
