@@ -24,7 +24,7 @@
                 <label for="id_Image">画像</label> {# 画像アップロード用フィールドのラベル #}
                 {{ form.Image.as_widget }} {# views と forms で定義しておいた内容から Image という要素を呼び出している #}
             </div>
-            <button type="submit" class="btn btn-primary">投稿</button> {# フォーム送信ボタン #}
+            <button type="submit" class="btn btn-primary" id="submit-button">投稿</button> {# フォーム送信ボタン #}
         </form>
     </div>
 </div>
@@ -50,4 +50,6 @@
             border-radius: 4px; /* 角を丸くする */
         }
     </style>
+    <script>function disableSubmitButton(form) {form.querySelector('#submit-button').disabled = true;}</script>
+
 {% endblock %} {# contentブロックの終了 #}
