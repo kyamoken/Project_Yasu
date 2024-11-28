@@ -18,7 +18,7 @@ urlpatterns = [
     path('contact/', ContactView.as_view(), name='contact'), # ここでcontact.htmlを表示する お問い合わせ
     path('like_comment/<int:comment_id>/', LikeCommentView.as_view(), name='like_comment'), # ここでlike_comment.htmlを表示する コメントいいね
     path('announcements/', AnnouncementListView.as_view(), name='announcement_list'), # ここでannouncement_list.htmlを表示する お知らせ一覧
-    path('announcements/new/', AnnouncementCreateView.as_view(), name='announcement_create'), # ここでannouncement_form.htmlを表示する お知らせ作成
+    #path('announcements/new/', AnnouncementCreateView.as_view(), name='announcement_create'),  ここでannouncement_form.htmlを表示する お知らせ作成
 ]
 
 
