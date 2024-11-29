@@ -163,8 +163,8 @@ class ContactView(FormView):
         email = form.cleaned_data['email']
         message = form.cleaned_data['message']
         send_mail(
-            f'お問い合わせ: {name}',
-            message,
+            message, f'お問い合わせ: {name}さん'
+            f'メールアドレス: {email}',
             email,
             ['kamoken0531@gmail.com'],
         )
