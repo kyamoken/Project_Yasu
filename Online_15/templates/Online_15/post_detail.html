@@ -60,11 +60,12 @@
 
         {% if user.is_authenticated %}
             <div class="comment-box">
-                <form method="post" action="">
+                <form method="post" action="" style="display: flex; flex-direction: column; align-items: center;">
                     {% csrf_token %}
                     {{ comment_form.as_p }}
                     <button type="submit" class="submit-button">コメントを追加</button>
                 </form>
+
             </div>
         {% else %}
             <p>コメントを追加するには<a href="{% url 'login' %}">ログイン</a>してください。</p>

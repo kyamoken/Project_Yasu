@@ -13,7 +13,7 @@
             {# enctypeは画像を送信するときにエラーを起こさないようにするためのコード #}
             {% csrf_token %} {# CSRF対策用のトークンを挿入 必須！！！ #}
             <div class="mb-3">
-                <label for="id_title">タイトル</label> {# タイトル入力フィールドのラベル #}
+                <label for="id_title" >タイトル</label> {# タイトル入力フィールドのラベル #}
                 {{ form.title }} {# views と forms で定義しておいた内容から title という要素を呼び出している #}
             </div>
             <div class="mb-3">
